@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
     name: String,
+    username: String,
     password: String,
     email: String,
     avatarName: String,
@@ -11,6 +12,13 @@ const userSchema = mongoose.Schema({
     },
 })
 
+userSchema.set('toJSON', {
+    virtuals: true,
+    transform: (doc, converted) => {
+      delete converted._id;
+    }
+});
+  
 const User = mongoose.model('User', userSchema);
 
 export default User;

@@ -16,6 +16,12 @@ const postSchema = mongoose.Schema({
     },
 })
 
+postSchema.set('toJSON', {
+    virtuals: true,
+    transform: (doc, converted) => {
+      delete converted._id;
+    }
+  });
 const PostMessage = mongoose.model('PostMessage', postSchema);
 
 export default PostMessage;

@@ -2,13 +2,21 @@ import jwt from "jsonwebtoken";
 import 'dotenv/config';
 import { addRefreshToken, deleteRefreshToken } from "./refreshToken.js";
 import User from "../../models/user.js";
+import bcrypt from "bcrypt";
 
-export const login = async(req, res) => {
+export const login = async (req, res) => {
     const body = req.body
     try {
-        const user = await User.findOne({
-            username: body.email,
+        
+        let user = await User.findOne({
+            username: body.username
         }).exec()
+    
+        const match = await bcrypt.compare(body.password, user.password);
+ 
+        if (!match) return res.status(404).json({message: "Wrong Credentials"})
+
+        user.password = undefined
 
         const accessToken = generateAccessToken({ name: body.email })
         const refreshToken = jwt.sign({ name: body.email }, process.env.REFRESH_TOKEN_SECRET)
@@ -22,7 +30,7 @@ export const login = async(req, res) => {
                     httpOnly: true
                 })
                 .status(200)
-                .json({ user }))
+                .json(user))
             .catch((error) => {
                 res.status(500).json({ message: error.message })
             })
@@ -31,7 +39,7 @@ export const login = async(req, res) => {
     }
 }
 
-export const logout = async(req, res) => {
+export const logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken
     deleteRefreshToken(refreshToken)
         .then(() => {

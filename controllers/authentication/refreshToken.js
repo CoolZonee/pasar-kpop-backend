@@ -33,7 +33,7 @@ export const deleteRefreshToken = async(token) => {
     }
 }
 
-export const refreshToken = async(req, res) => {
+export const refreshToken = async (req, res) => {
     const token = req.cookies.refreshToken
     if (token == null) return res.status(401).send()
     if (!getRefreshToken(token)) return res.status(403).send()
@@ -44,6 +44,9 @@ export const refreshToken = async(req, res) => {
             .cookie("accessToken", accessToken, {
                 httpOnly: true
             })
+            .cookie("refreshToken", req.cookies.refreshToken, {
+                    httpOnly: true
+                })
             .status(200)
             .send()
     })
