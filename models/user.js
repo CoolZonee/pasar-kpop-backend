@@ -11,14 +11,17 @@ const userSchema = mongoose.Schema({
         default: new Date()
     },
 })
-
-userSchema.set('toJSON', {
-    virtuals: true,
-    transform: (doc, converted) => {
-      delete converted._id;
-    }
-});
   
 const User = mongoose.model('User', userSchema);
+
+// Duplicate the ID field.
+userSchema.virtual('id').get(function(){
+    return this._id.toHexString();
+});
+
+// Ensure virtual fields are serialised.
+userSchema.set('toJSON', {
+    virtuals: true
+});
 
 export default User;

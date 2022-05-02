@@ -7,7 +7,8 @@ const postSchema = mongoose.Schema({
     creator: Object,
     avatarName: String,
     price: String,
-    isIncludePos: Boolean,
+  isIncludePos: Boolean,
+    likedBy: [{type: mongoose.Types.ObjectId}],
     group: [String],
     category: [String],
     createdAt: {
@@ -16,12 +17,16 @@ const postSchema = mongoose.Schema({
     },
 })
 
-postSchema.set('toJSON', {
-    virtuals: true,
-    transform: (doc, converted) => {
-      delete converted._id;
-    }
-  });
 const PostMessage = mongoose.model('PostMessage', postSchema);
+
+// Duplicate the ID field.
+postSchema.virtual('id').get(function(){
+    return this._id.toHexString();
+});
+
+// Ensure virtual fields are serialised.
+postSchema.set('toJSON', {
+    virtuals: true
+});
 
 export default PostMessage;

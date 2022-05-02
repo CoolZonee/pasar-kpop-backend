@@ -55,5 +55,12 @@ export const logout = async (req, res) => {
 }
 
 export const generateAccessToken = (user) => {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3600s' })
+}
+
+export const getHashed = async (req, res) => {
+    const pw = req.body.pw
+    
+    const hashed = await bcrypt.hash(pw, 10)
+    res.status(200).json(hashed)
 }
