@@ -4,7 +4,7 @@ const postSchema = mongoose.Schema({
     title: String,
     message: String,
     imageName: String,
-    creator: Object,
+    creator: [{type: mongoose.Types.ObjectId}],
     avatarName: String,
     price: String,
   isIncludePos: Boolean,

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import 'dotenv/config';
 import { addRefreshToken, deleteRefreshToken } from "./refreshToken.js";
-import User from "../../models/user.js";
+import User from "../../models/userModel.js";
 import bcrypt from "bcrypt";
 
 export const login = async (req, res) => {

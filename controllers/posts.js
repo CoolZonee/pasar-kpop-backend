@@ -1,5 +1,6 @@
-import PostMessage from "../models/postsMessage.js";
+import PostMessage from "../models/postModel.js";
 import mongoose from "mongoose";
+import fs from "fs";
 
 export const getPosts = async (req, res) => {
     try {
@@ -16,7 +17,7 @@ export const getPosts = async (req, res) => {
             }
         },
         {
-            $lookup: {
+            $lookup: {  
                 from: "users",
                 localField: "creator",
                 foreignField: "_id",
@@ -25,10 +26,9 @@ export const getPosts = async (req, res) => {
                 }],
                 as: "creator",
             }
-            }
+        }
         ]
-    );
-
+        );
         res.status(200).json(postMessages)
     }
     catch (error) {
@@ -38,8 +38,11 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const post = req.body
-    const newPost = new PostMessage(post)
+    const file = req.file
+    
     try {
+        post["imageName"] = file.filename
+        const newPost = new PostMessage(post)
         await newPost.save()
         res.status(201).json(newPost);
     }
@@ -58,6 +61,7 @@ export const updatePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
     const body = req.body
+    console.log(body)
     let newPost = await PostMessage.findById(body.postId)
 
     let i = newPost.likedBy.indexOf(body.userId)

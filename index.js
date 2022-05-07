@@ -5,10 +5,10 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 import 'dotenv/config';
-
-import userRoutes from './routes/users.js';
-import postRoutes from './routes/posts.js';
-import authRoutes from './routes/auth.js';
+import userRoutes from './routes/userRoute.js';
+import postRoutes from './routes/postRoute.js';
+import authRoutes from './routes/authRoute.js';
+import imageRoute from './routes/imageRoute.js';
 
 const app = express()
 
@@ -20,6 +20,7 @@ app.use(cors())
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/posts', postRoutes)
+app.use('/images', imageRoute)
 
 const CONNECTION_URL = process.env.MONGODB_CONNECTION_URL
 const PORT = process.env.PORT || 5000;

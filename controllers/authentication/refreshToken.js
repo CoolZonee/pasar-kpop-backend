@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken'
-import RefreshToken from "../../models/refreshToken.js";
+import RefreshToken from "../../models/refreshTokenModel.js";
 import { generateAccessToken } from './auth.js';
 
 export const getRefreshToken = async(token) => {
