@@ -38,13 +38,43 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const post = req.body
+
     const file = req.file
     
     try {
         post["imageName"] = file.filename
         const newPost = new PostMessage(post)
         await newPost.save()
-        res.status(201).json(newPost);
+        const postMessage = await PostMessage.aggregate([
+            {
+                $match: {"_id": newPost._id}
+        },{
+
+            $lookup: {
+                from: "users",
+                localField: "likedBy",
+                foreignField: "_id",
+                pipeline: [{
+                    $project: { "password": 0 }
+                    
+                }],
+                as: "likedBy"
+            }
+        },
+        {
+            $lookup: {  
+                from: "users",
+                localField: "creator",
+                foreignField: "_id",
+                pipeline: [{
+                    $project: { "password": 0 }
+                }],
+                as: "creator",
+            }
+        }
+        ]
+        );
+        res.status(201).json(postMessage);
     }
     catch (error) {
         res.status(409).json({ message: error.message })
@@ -61,7 +91,7 @@ export const updatePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
     const body = req.body
-    console.log(body)
+
     let newPost = await PostMessage.findById(body.postId)
 
     let i = newPost.likedBy.indexOf(body.userId)

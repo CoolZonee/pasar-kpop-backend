@@ -13,7 +13,7 @@ const postSchema = mongoose.Schema({
     category: [String],
     createdAt: {
         type: Date,
-        default: new Date()
+        default: new Date().toISOString()
     },
 })
 

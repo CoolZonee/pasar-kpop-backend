@@ -13,6 +13,7 @@ const __dirname = dirname(__filename)
 export const getImages = async (req, res) => {
     const imageName = req.params.imageName
     try {
+        // exp path: pasar-kpop-backend + /uploads/ + image123456789.jpg
         res.status(200).download(process.cwd() + "/uploads/" + imageName)
         
     } catch (error) {

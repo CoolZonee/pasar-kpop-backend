@@ -8,6 +8,6 @@ const router = express.Router()
 router.post('/login', login)
 router.post('/logout', verifyToken, logout)
 router.post('/refresh-token', refreshToken)
-router.get('/get-hashed', getHashed)
+router.get('/get-hashed', getHashed) // for getting temporarily hashed pw
 
 export default router;
